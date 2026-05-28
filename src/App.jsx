@@ -9,14 +9,14 @@ const workflowSteps = [
     title: 'Identify Privacy Risks',
     description:
       'Identify privacy risks based on your product description and the user context it operates in.',
-    image: '/images/step1.png',
+    image: '/step1.png',
     alt: 'Screenshot of Privy step one showing identified privacy risks.',
   },
   {
     step: 2,
     title: 'Rank by Priority',
     description: 'Rank the privacy risks in priority order.',
-    image: '/images/step2.png',
+    image: '/step2.png',
     alt: 'Screenshot of Privy step two showing prioritized privacy risks.',
   },
   {
@@ -24,7 +24,7 @@ const workflowSteps = [
     title: 'Create Mitigation Plan',
     description:
       'Brainstorm a mitigation strategy for the identified risks.',
-    image: '/images/step3.png',
+    image: '/step3.png',
     alt: 'Screenshot of Privy step three showing mitigation planning.',
   },
   {
@@ -32,7 +32,7 @@ const workflowSteps = [
     title: 'Generate Summary',
     description:
       'Get structured summary of the ranked privacy risks and their mitigation strategies.',
-    image: '/images/step4.png',
+    image: '/step4.png',
     alt: 'Screenshot of Privy step four showing generated workflow summary.',
   },
   {
@@ -40,10 +40,23 @@ const workflowSteps = [
     title: 'Export Report',
     description:
       'Export a structured report to document decisions and share with others.',
-    image: '/images/step5.png',
+    image: '/step5.png',
     alt: 'Screenshot of Privy step five showing exported report output.',
   },
 ]
+
+const BIBTEX = `@inproceedings{lee2026privy,
+  title     = {Privy: Envisioning and Mitigating Privacy Risks
+               for Consumer-facing AI Product Concepts},
+  author    = {Lee, Hao-Ping and Yang, Yu-Ju and Bilik, Matthew
+               and Krsek, Isadora and von Davier, Thomas Serban
+               and Monteiro, Kyzyl and Lin, Jason and Agarwal, Shivani
+               and Forlizzi, Jodi and Das, Sauvik},
+  booktitle = {Proceedings of the 2026 CHI Conference on
+               Human Factors in Computing Systems},
+  year      = {2026},
+  doi       = {10.1145/3772318.3791279}
+}`
 
 const reveal = {
   hidden: { opacity: 0, y: 10 },
@@ -93,6 +106,25 @@ function fallbackFrameDataUri(label) {
   )}`
 }
 
+function CopyButton() {
+  const [copied, setCopied] = useState(false)
+  const handleCopy = () => {
+    navigator.clipboard.writeText(BIBTEX).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      className="absolute top-7 right-3 border border-zinc-300 bg-white px-2 py-1 text-xs tracking-wide text-zinc-500 transition-colors hover:border-zinc-500 hover:text-zinc-800"
+    >
+      {copied ? 'Copied!' : 'Copy'}
+    </button>
+  )
+}
+
 function CrossfadeImage({ src, alt, onError }) {
   const [topSrc, setTopSrc] = useState(src)
   const [bottomSrc, setBottomSrc] = useState(src)
@@ -118,7 +150,6 @@ function CrossfadeImage({ src, alt, onError }) {
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      {/* bottom layer: incoming image, always visible */}
       <img
         src={bottomSrc}
         alt=""
@@ -133,7 +164,6 @@ function CrossfadeImage({ src, alt, onError }) {
           objectPosition: 'center',
         }}
       />
-      {/* top layer: outgoing image, fades out */}
       <img
         src={topSrc}
         alt={alt}
@@ -225,14 +255,14 @@ function App() {
               </div>
             </div>
             <figure className="overflow-hidden border border-zinc-200 bg-white shadow-sm">
-            <video
+              <video
                 src="/demo.mp4"
                 autoPlay
                 loop
                 muted
                 playsInline
                 className="w-full object-contain"
-            />
+              />
             </figure>
           </div>
         </RevealSection>
@@ -347,36 +377,56 @@ function App() {
           id="research"
           className="border-t border-zinc-200"
         >
-          <div className="mx-auto w-full max-w-6xl px-6 py-20 md:px-10 md:py-28">
+          <div className="mx-auto w-full max-w-6xl px-6 py-12 md:px-10 md:py-9">
             <div className="split-section-layout">
               <div>
                 <p className="kicker mb-3">Research</p>
                 <h2 className="section-title">The research this tool is built on</h2>
-                <figure className="mt-8 block w-full max-w-[560px] overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm">
-                  <img
-                    src="/conference.jpg"
-                    alt="Privy researchers presenting at a conference"
-                    className="block w-full object-cover"
-                    onError={(event) => handleStepImageError(event, 'Conference Photo')}
-                  />
-                </figure>
+                <p className="body-copy mt-6">
+                  Privy guides AI product teams through a structured privacy assessment, surfacing blind spots with LLM-generated suggestions while keeping practitioners in control of final decisions. In an evaluation with 24 practitioners reviewed by 13 privacy experts, Privy consistently helped non-experts identify relevant risks and propose effective mitigation strategies. This work has been recognized with a Distinguished Paper Award at USENIX Security 2024, a Best Paper Award at CHI 2024, and an Honourable Mention at CHI 2026.
+                </p>
               </div>
               <div>
-                <p className="body-copy">
-                  Privy grew out of a research study of how AI product teams navigate privacy decisions. Through a formative study with AI practitioners, we found that most product teams lack the privacy expertise—and the structured tools—to proactively identify the risks their AI products may create or worsen.
-                </p>
-                <p className="body-copy mt-5">
-                  Privy was built to close this gap. It guides practitioners through a structured privacy assessment, using LLM-generated suggestions to surface blind spots while keeping practitioners in control of final decisions. In an evaluation with 24 practitioners reviewed by 13 privacy experts, Privy consistently helped non-experts identify relevant risks and propose effective mitigation strategies. This work has been recognized with a Distinguished Paper Award at USENIX Security 2024, a Best Paper Award at CHI 2024, and an Honourable Mention at CHI 2026.
-                </p>
-                <div className="mt-10 flex flex-wrap gap-3">
+                {/* Learn More */}
+                <div className="mt-10 border-t border-zinc-200 pt-8">
+                  <p className="kicker mb-5">Learn More</p>
+
+                  {/* Paper card */}
                   <a
                     href="https://arxiv.org/abs/2509.23525"
                     target="_blank"
                     rel="noreferrer"
-                    className="mono-button"
+                    className="group mb-6 flex items-start gap-4"
                   >
-                    Read Paper
+                    <div className="w-20 flex-shrink-0 overflow-hidden rounded border border-zinc-200 bg-zinc-50 transition-opacity group-hover:opacity-75">
+                      <img
+                        src="/paper-thumbnail.png"
+                        alt="Privy paper thumbnail"
+                        className="block w-full object-cover"
+                        onError={(e) => handleStepImageError(e, 'Paper')}
+                      />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium leading-snug text-zinc-900 group-hover:underline">
+                        Privy: Envisioning and Mitigating Privacy Risks for Consumer-facing AI Product Concepts
+                      </p>
+                      <p className="mt-1 text-xs text-zinc-500">CHI 2026 · Honourable Mention</p>
+                    </div>
                   </a>
+
+                  {/* Authors */}
+                  <p className="mb-6 text-sm leading-relaxed text-zinc-600">
+                    <a href="https://hankhplee.com" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-zinc-900">Hao-Ping (Hank) Lee</a>, Yu-Ju Yang, Matthew Bilik, Isadora Krsek, Thomas Serban von Davier, Kyzyl Monteiro, Jason Lin, Shivani Agarwal, Jodi Forlizzi, and Sauvik Das
+                  </p>
+
+                  {/* BibTeX */}
+                  <div className="relative">
+                    <p className="kicker mb-2">Cite</p>
+                    <pre className="overflow-x-auto rounded border border-zinc-200 bg-zinc-50 p-4 font-mono text-xs leading-relaxed text-zinc-700">
+{BIBTEX}
+                    </pre>
+                    <CopyButton />
+                  </div>
                 </div>
               </div>
             </div>
@@ -399,18 +449,22 @@ function App() {
                   Researchers at CMU&apos;s HCII &amp; SPUD Lab
                 </h2>
                 <div className="mt-6 flex items-center gap-10">
-                  <img
-                    src="/spud.png"
-                    alt="SPUD Lab logo"
-                    className="institution-logo"
-                    onError={(event) => handleStepImageError(event, 'SPUD')}
-                  />
-                  <img
-                    src="/hcii.png"
-                    alt="HCII logo"
-                    className="institution-logo"
-                    onError={(event) => handleStepImageError(event, 'HCII')}
-                  />
+                  <a href="https://cmu-spuds.github.io" target="_blank" rel="noreferrer">
+                    <img
+                      src="/spud.png"
+                      alt="SPUD Lab logo"
+                      className="institution-logo"
+                      onError={(event) => handleStepImageError(event, 'SPUD')}
+                    />
+                  </a>
+                  <a href="https://hcii.cmu.edu" target="_blank" rel="noreferrer">
+                    <img
+                      src="/hcii.png"
+                      alt="HCII logo"
+                      className="institution-logo"
+                      onError={(event) => handleStepImageError(event, 'HCII')}
+                    />
+                  </a>
                 </div>
               </div>
               <div>
