@@ -280,7 +280,7 @@ function App() {
 
             <div className="how-it-works-layout">
               <div>
-                <div role="tablist" aria-label="How Privy works" className="space-y-3">
+                <div role="tablist" aria-label="How Privy works" className="space-y-1">
                   {workflowSteps.map((step) => {
                     const isActive = step.step === activeStep
                     const isExpanded = step.step === expandedStep
